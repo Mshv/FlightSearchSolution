@@ -42,8 +42,7 @@ public class BusyFlightsApplicationTests {
     BusyFlightsRequest busyFlightsRequest = mock(BusyFlightsRequest.class);
     when(busyFlightsRequest.getNumberOfPassengers()).thenReturn(5);
     Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-      when(flightService.searchFlights(busyFlightsRequest)).thenThrow(
-          new IllegalArgumentException("Number Of Passengers - Maximum 4 passengers"));
+      flightService.searchFlights(busyFlightsRequest);
     });
     assertEquals("Number Of Passengers - Maximum 4 passengers", exception.getMessage());
   }

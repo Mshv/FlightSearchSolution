@@ -4,7 +4,6 @@ import com.travix.medusa.busyflights.domain.busyflights.BusyFlightsRequest;
 import com.travix.medusa.busyflights.domain.busyflights.BusyFlightsResponse;
 import com.travix.medusa.busyflights.service.FlightService;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -31,8 +30,9 @@ public class BusyFlightsApplication {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		responses.forEach(response -> System.out.println("response : Airline:  "+ response.getAirline() +
-				                                                       " Supplier: "+ response.getSupplier()+
-																															 " Fare:     "+response.getFare()));
+		responses.forEach(response ->
+				System.out.println("response : Airline:  "+ response.getAirline() +
+				                             " Supplier: "+ response.getSupplier()+
+						                         " Fare:     "+response.getFare()));
 	}
 }

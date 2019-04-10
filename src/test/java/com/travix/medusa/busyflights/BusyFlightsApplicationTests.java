@@ -2,44 +2,50 @@ package com.travix.medusa.busyflights;
 
 import com.travix.medusa.busyflights.domain.busyflights.BusyFlightsRequest;
 import com.travix.medusa.busyflights.domain.busyflights.BusyFlightsResponse;
-import com.travix.medusa.busyflights.service.CrazyAirService;
 import com.travix.medusa.busyflights.service.FlightService;
 import com.travix.medusa.busyflights.service.IFlightService;
-import com.travix.medusa.busyflights.service.ToughJetService;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
-
-import java.util.*;
-import java.util.stream.Stream;
-
-@RunWith(SpringRunner.class)
-@SpringBootTest
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
+@RunWith(MockitoJUnitRunner.class)
 public class BusyFlightsApplicationTests {
 
   FlightService flightService = null;
-  private List<IFlightService> iFlightServiceList = null;
 
   @Mock
-  CrazyAirService crazyAirService;
+  IFlightService crazyAirService;
 
   @Mock
-  ToughJetService toughJetService;
+  IFlightService toughJetService;
 
   @Before
   public void setUp() {
-    iFlightServiceList = Arrays.asList(crazyAirService, toughJetService);
-    flightService = new FlightService(iFlightServiceList);
+    List<IFlightService> iFlightServiceList = Arrays.asList(crazyAirService, toughJetService);
+    flightService = spy(new FlightService(iFlightServiceList));
+  }
 
+  @Test
+  public void numberOfPassengersTest() throws IllegalArgumentException {
+    BusyFlightsRequest busyFlightsRequest = mock(BusyFlightsRequest.class);
+    when(busyFlightsRequest.getNumberOfPassengers()).thenReturn(5);
+    Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+      when(flightService.searchFlights(busyFlightsRequest)).thenThrow(
+          new IllegalArgumentException("Number Of Passengers - Maximum 4 passengers"));
+    });
+    assertEquals("Number Of Passengers - Maximum 4 passengers", exception.getMessage());
   }
 
   @Test
@@ -47,62 +53,56 @@ public class BusyFlightsApplicationTests {
     BusyFlightsRequest request = new BusyFlightsRequest();
     List<BusyFlightsResponse> busyFlightsResponseList = new ArrayList<>();
 
-    List<IFlightService> mockedIFlightServiceResult = Arrays.asList(
-        new IFlightService() {
-          @Override
-          public List<BusyFlightsResponse> searchProviderFlights(BusyFlightsRequest request) {
-            BusyFlightsResponse busyFlightsResponse = new BusyFlightsResponse(
-                "Air Canada",
-                "CrazyAir",
-                2100,
-                "KUL",
-                "AMS",
-                "2019-04-04T10:15:30",
-                "2019-04-08T18:25:35");
-            busyFlightsResponseList.add(busyFlightsResponse);
-            BusyFlightsResponse busyFlightsResponse2 = new BusyFlightsResponse(
-                "US Canada",
-                "CrazyAir",
-                2000,
-                "KUL",
-                "AMS",
-                "2019-05-04T10:15:30",
-                "2019-05-08T18:25:35");
-            busyFlightsResponseList.add(busyFlightsResponse2);
-            return busyFlightsResponseList;
-          }
-        }
-    );
+    List<BusyFlightsResponse> crazyResponseList = new ArrayList<>();
+    BusyFlightsResponse busyFlightsResponse = new BusyFlightsResponse(
+        "Air Canada",
+        "CrazyAir",
+        2100,
+        "KUL",
+        "AMS",
+        "2019-04-04T10:15:30",
+        "2019-04-08T18:25:35");
+    crazyResponseList.add(busyFlightsResponse);
+    BusyFlightsResponse busyFlightsResponse2 = new BusyFlightsResponse(
+        "US Canada",
+        "CrazyAir",
+        2000,
+        "KUL",
+        "AMS",
+        "2019-05-04T10:15:30",
+        "2019-05-08T18:25:35");
+    crazyResponseList.add(busyFlightsResponse2);
+    when(crazyAirService.searchProviderFlights(any(BusyFlightsRequest.class)))
+        .thenReturn(crazyResponseList);
 
-    for (IFlightService provider : mockedIFlightServiceResult) {
-      when(provider.searchProviderFlights(any(BusyFlightsRequest.class))).thenReturn(mockedIFlightServiceResult.get(0).searchProviderFlights(any(BusyFlightsRequest.class)));
-    }
-    assertEquals(mockedIFlightServiceResult, flightService.searchFlights(request));
-    verify(iFlightServiceList.get(0)).searchProviderFlights(any(BusyFlightsRequest.class));
+    List<BusyFlightsResponse> toughJetResponseList = new ArrayList<>();
+    BusyFlightsResponse busyFlightsResponse3 = new BusyFlightsResponse(
+        "Air Canada",
+        "CrazyAir",
+        2150,
+        "KUL",
+        "AMS",
+        "2019-04-04T10:15:30",
+        "2019-04-08T18:25:35");
+    toughJetResponseList.add(busyFlightsResponse3);
+    BusyFlightsResponse busyFlightsResponse4 = new BusyFlightsResponse(
+        "US Canada",
+        "CrazyAir",
+        2300,
+        "KUL",
+        "AMS",
+        "2019-05-04T10:15:30",
+        "2019-05-08T18:25:35");
+    toughJetResponseList.add(busyFlightsResponse4);
+    when(toughJetService.searchProviderFlights(any(BusyFlightsRequest.class))).thenReturn(toughJetResponseList);
 
-//    FlightService.IFlightService webServiceApi = mock(FlightService.IFlightService.class);
-//    FlightService.IFlightService webServiceApi2 = mock(FlightService.IFlightService.class);
-//    FlightService underTest = new FlightService(Arrays.asList(webServiceApi, webServiceApi2));
-//    FlightService.Request request = new FlightService.Request();
-//    request.setName("Amir");
-//    List<FlightService.Response> mockedWSResult = Arrays.asList(
-//        new FlightService.Response("Ali"),
-//        new FlightService.Response("Jafar")
-//    );
-//    List<FlightService.Response> mockedWSResult2 = Arrays.asList(
-//        new FlightService.Response("Amir"),
-//        new FlightService.Response("Mehdi")
-//    );
-//    when(webServiceApi.searchFlights(any(FlightService.Request.class))).thenReturn(mockedWSResult);
-//    when(webServiceApi2.searchFlights(any(FlightService.Request.class))).thenReturn(mockedWSResult2);
-//
-//    List<FlightService.Response> responseList = underTest.searchFlights(request);
-//    //responseList.sort(Comparator.comparing(Controller.Response::getLastName));
-//
-//    assertEquals(4, responseList.size());
-//    assertEquals("Ali", responseList.get(0).getLastName());
-//    assertEquals("Amir", responseList.get(1).getLastName());
-//    assertEquals("Jafar", responseList.get(2).getLastName());
-//    assertEquals("Mehdi", responseList.get(3).getLastName());
+    busyFlightsResponseList.add(busyFlightsResponse2);
+    busyFlightsResponseList.add(busyFlightsResponse);
+    busyFlightsResponseList.add(busyFlightsResponse3);
+    busyFlightsResponseList.add(busyFlightsResponse4);
+
+    assertEquals(busyFlightsResponseList, flightService.searchFlights(request));
+    verify(crazyAirService).searchProviderFlights(any(BusyFlightsRequest.class));
+    verify(toughJetService).searchProviderFlights(any(BusyFlightsRequest.class));
   }
 }

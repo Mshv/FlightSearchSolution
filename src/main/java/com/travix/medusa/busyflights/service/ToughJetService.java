@@ -35,7 +35,7 @@ public class ToughJetService implements IFlightService {
     for (ToughJetResponse toughJetResponse : toughJetResponses) {
       busyFlightsResponse.setSupplier("ToughJet");
       busyFlightsResponse.setAirline(toughJetResponse.getCarrier());
-      busyFlightsResponse.setFare(toughJetResponse.getBasePrice() * toughJetResponse.getDiscount() + toughJetResponse.getTax());
+      busyFlightsResponse.setFare((toughJetResponse.getBasePrice() * (100-toughJetResponse.getDiscount()))/100 + toughJetResponse.getTax());
       busyFlightsResponse.setDepartureAirportCode(toughJetResponse.getDepartureAirportName());
       busyFlightsResponse.setDestinationAirportCode(toughJetResponse.getArrivalAirportName());
       busyFlightsResponse.setDepartureDate(toughJetResponse.getOutboundDateTime());

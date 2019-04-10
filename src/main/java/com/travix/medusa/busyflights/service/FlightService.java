@@ -19,10 +19,12 @@ public class FlightService {
     this.providers = providers;
   }
 
-  public List<BusyFlightsResponse> searchFlights(BusyFlightsRequest request) throws Exception {
+  public List<BusyFlightsResponse> searchFlights(BusyFlightsRequest request) throws IllegalArgumentException {
     List<BusyFlightsResponse> result = new ArrayList<>();
 
-    if (request.getNumberOfPassengers() > 4) throw new Exception("Number Of Passengers - Maximum 4 passengers");
+    if (request.getNumberOfPassengers() > 4) {
+      throw new IllegalArgumentException("Number Of Passengers - Maximum 4 passengers");
+    }
 
     for (IFlightService provider : providers) {
       List<BusyFlightsResponse> responses = provider.searchProviderFlights(request);

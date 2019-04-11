@@ -109,4 +109,6 @@ It is fine to change any of the supplied application code, if you choose to do s
 
 -Total price rounded to 2 decimals
 
+- Check code Quality - SonarQube
+
 

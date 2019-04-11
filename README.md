@@ -105,7 +105,7 @@ It is fine to change any of the supplied application code, if you choose to do s
 
 -Date format conversion
 
--Readme file - how to run your project
+-Readme file - how to run project
 
 -Total price rounded to 2 decimals
 

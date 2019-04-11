@@ -97,17 +97,18 @@ The service should connect to the both the suppliers using HTTP.
 It is fine to change any of the supplied application code, if you choose to do so please add comments to indicate what has changed and why.
 
 **Note**
--Things to be done:
 
--All the exceptions written are unchecked exception (runtime exception), better to have Checked ones 
+- Things to be done:
 
--Java-doc 
+- All the exceptions written are unchecked exception (runtime exception), better to have Checked ones 
 
--Date format conversion
+- Java-doc 
 
--Readme file - how to run project
+- Date format conversion
 
--Total price rounded to 2 decimals
+- Readme file - how to run project
+
+- Total price rounded to 2 decimals
 
 - Check code Quality - SonarQube
 

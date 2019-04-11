@@ -97,8 +97,10 @@ The service should connect to the both the suppliers using HTTP.
 It is fine to change any of the supplied application code, if you choose to do so please add comments to indicate what has changed and why.
 
 **Note**
-
-Please clone this project then create your own repository from it. Do not fork/branch this project when creating your solution as it will be visible to other applicants.
-=======
-# FlightsSearchSolution
+Things to be done:
+All the exceptions written are unchecked exception (runtime exception), better to have Checked ones 
+Java-doc 
+Date format conversion
+Readme file - how to run your project
+Total price rounded to 2 decimals
 
